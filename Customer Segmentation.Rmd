@@ -1,0 +1,246 @@
+---
+title: "Customer Segmentation"
+author: "Kevin"
+date: "7/16/2021"
+output: html_document
+---
+### Customer Segmentation Model using K-Means ###
+# This project is broken into two sections
+# One: General data analysis and data visualization
+# Two: Machine Learning Model to predict customer segments using K-Means
+
+### 1.0 ###
+# Load in dataset with file directory
+customer_data <- read.csv("~/Desktop/Data Science Projects/customer-segmentation-dataset/Mall_Customers.csv")
+
+### 1.1 ###
+### Data Exploration ###
+str(customer_data)
+
+# Return Coloumn Names of Dataset
+names(customer_data)
+
+# Return first six rows of dataset
+head(customer_data)
+summary(customer_data)
+# From the summary we can see that there are 200 rows where ages of shoppers range from 18-70yo with a mean of them being ~40yo with a mean spending score of 50.20
+
+sd(customer_data$Age)
+summary(customer_data$Annual.Income..k..)
+sd(customer_data$Annual.Income..k..)
+sd(customer_data$Spending.Score..1.100.)
+
+### 1.2 ###
+### Data Visualization ###
+
+### Customer Gender Visualization ###
+# Barplot 
+gender <-table(customer_data$Gender)
+barplot(gender,main="Gender Comparision",
+       ylab="Count",
+       xlab="Gender",
+       col=rainbow(2),
+       legend=rownames(gender))
+       
+# From the barplot we can see that there are more women than men shoppers in the dataset
+
+# install.packages("plotrix")
+install.packages("plotrix")
+
+# Pie Chart
+pct=round(gender/sum(a)*100)
+lbs=paste(c("Female","Male")," ",pct,"%",sep=" ")
+library(plotrix)
+pie3D(gender,labels=lbs,
+   main="Ratio of Female and Male Shoppers")
+   
+# Pie Chart shows that Female Shoppers make up 56% of the data, whereas Male Shoppers only make up 44%
+
+### Visualization of Age Distribution ###
+summary(customer_data$Age)
+hist(customer_data$Age,
+    col='blue',
+    main='Count of Age Class',
+    xlab='Age Class',
+    ylab='Frequency',
+    labels=TRUE)
+# histogram shows that 36yo's make up most of the dataset followed by 26 and 24
+
+# Boxplot
+boxplot(customer_data$Age,
+  col='red',
+  main='Descriptive Analysis of Age')
+
+# Age Analysis
+# From the two graphs we can conclude that the majority of customer ages are between 30-35
+
+# Analyze Annual Income of Customers
+summary(customer_data$Annual.Income..k..)
+# historgram of Annual Income
+hist(customer_data$Annual.Income..k..,
+  col="green",
+  main="Annual Income",
+  xlab="Annual Income Class",
+  ylab="Frequency",
+  labels=TRUE)
+  
+# Density plot for annual income
+plot(density(customer_data$Annual.Income..k..),
+  col='yellow',
+  main='Annual Income',
+  xlab='Annual Income Class',
+  ylab='Density')
+polygon(density(customer_data$Annual.Income..k..),
+  col='#ccff66')
+
+# Annual Income Analysis  
+# from the descriptive analysis we can conclude that the minimum annual income of customers is 15 thousand and the maximum is about 140 thousand. The density plot indicates theres a normal distribution of income. 
+
+# Analyze Spending Scores
+summary(customer_data$Spending.Score..1.100.)
+# Boxplot of spending score
+boxplot(customer_data$Spending.Score..1.100.,
+  horizontal=TRUE,
+  col='red',
+  main='Spending Score')
+  
+# Histogram of spending score
+hist(customer_data$Spending.Score..1.100.,
+  main='Spending Score',
+  xlab='Spending Score Class',
+  ylab='Frequency',
+  col='purple',
+  labels=TRUE)
+  
+# Spending Score Analysis
+# The minimum spending score is 1 and the maximum spending score is 99 with an average of 50.20. We can see from the histogram that the most frequent shoppers fall into class 40 and 50.
+
+
+### 2.0 ###
+### K-Means ###
+
+# Determin Best Number of Clusters
+# Silhouette Method
+library(cluster) 
+library(gridExtra)
+library(grid)
+
+# S.M. 1
+k1<-kmeans(customer_data[,3:5],2,iter.max=100,nstart=50,algorithm="Lloyd")
+s1<-plot(silhouette(k2$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.29
+
+# S.M. 2
+k2<-kmeans(customer_data[,3:5],3,iter.max=100,nstart=50,algorithm="Lloyd")
+s2<-plot(silhouette(k2$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.38
+
+# S.M. 3
+k3<-kmeans(customer_data[,3:5],4,iter.max=100,nstart=50,algorithm="Lloyd")
+s3<-plot(silhouette(k3$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.41
+
+# S.M. 4
+k4<-kmeans(customer_data[,3:5],5,iter.max=100,nstart=50,algorithm="Lloyd")
+s4<-plot(silhouette(k4$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.44
+
+# S.M. 5
+k5<-kmeans(customer_data[,3:5],6,iter.max=100,nstart=50,algorithm="Lloyd")
+s5<-plot(silhouette(k5$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.45
+
+# S.M. 6
+k6<-kmeans(customer_data[,3:5],7,iter.max=100,nstart=50,algorithm="Lloyd")
+s6<-plot(silhouette(k6$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.44
+
+# S.M. 7
+k7<-kmeans(customer_data[,3:5],8,iter.max=100,nstart=50,algorithm="Lloyd")
+s7<-plot(silhouette(k7$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.43
+
+# S.M. 8
+k8<-kmeans(customer_data[,3:5],9,iter.max=100,nstart=50,algorithm="Lloyd")
+s8<-plot(silhouette(k8$cluster,dist(customer_data[,3:5],"euclidean")))
+# Avg silhouette width: 0.42
+
+# Use fviz_nbclust() function to determine optimal number of clusters
+pkgs <- c("factoextra",  "NbClust")
+install.packages(pkgs)
+library(NbClust)
+library(factoextra)
+fviz_nbclust(customer_data[,3:5],kmeans, method = 'silhouette')
+# optimal number of clusters: 6
+
+k6<-kmeans(customer_data[,3:5],6,iter.max=100,nstart=50,algorithm="Lloyd")
+k6
+
+# Principal component analysis
+pcclust <- prcomp(customer_data[,3:5], scale=FALSE)
+summary(pcclust)
+
+pcclust$rotation[,1:2]
+
+set.seed(1)
+
+### 2.1 ###
+### Annual Income and Spending Clusters ###
+ggplot(customer_data, aes(x = Annual.Income..k.., y = Spending.Score..1.100.)) +
+  geom_point(stat = 'identity', aes(color = as.factor(k6$cluster))) + 
+  scale_color_discrete(name=' ',
+              breaks=c('1', '2', '3', '4', '5', '6'),
+              labels=c('Cluster1', 'Cluster 2', 'Cluster 3', 'Cluster 4', 'Cluster 5', 'Cluster 6')) +
+  ggtitle('Segments of Mall Customers', subtitle = 'Using K-Means Clustering')
+  
+### Cluster Analysis ###
+# Cluster 1: represents customers with high income but low spending 
+# Cluster 2 and 5: represents customers with medium incomes and medium spending 
+# CLuster 3: represents customers with low income but high spending 
+# Cluster 4: represents customers with high income and high spending 
+# Cluster 6: represent the customers with low income and low spending
+
+
+### Spending and Age Clusters ###
+ggplot(customer_data, aes(x =Spending.Score..1.100., y =Age)) + 
+  geom_point(stat = "identity", aes(color = as.factor(k6$cluster))) +
+  scale_color_discrete(name=" ",
+                      breaks=c("1", "2", "3", "4", "5","6"),
+                      labels=c("Cluster 1", "Cluster 2", "Cluster 3", "Cluster 4", "Cluster 5","Cluster 6")) +
+  ggtitle("Segments of Mall Customers", subtitle = "Using K-means Clustering")
+
+### Cluster Analysis ###
+# Cluster 1 and 6: represent low spending customers of all ages with more weight towards 40 and over
+# Cluster 2: represents customers who are between 45-70 and medium spenders
+# CLuster 3: represents customers who are younger, 20-35 and are high spenders
+# Cluster 4: represents customers who are between 25-40 and are high spenders
+# Cluster 5: represent the customers who are between 20-40 and are medium spenders
+
+### 
+
+kCols <- function(vec){cols=rainbow(length (unique (vec)))
+return (cols[as.numeric(as.factor(vec))])}
+
+### 2.2 ###
+# Machine Learning Model
+# K-mean clusters
+install.package('dignm')
+digCluster <- k6$cluster; dignm <- as.character(digCluster); 
+
+plot(pcclust$x[,1:2], col =kCols(digCluster),pch =19,xlab ="K-means",ylab="classes")
+legend("bottomleft",unique(dignm),fill=unique(kCols(digCluster)))
+
+### Cluster Analysis ###
+# PCA1:
+#PCA2: Income
+# Cluster 1: represents customers with medium PCA1 and low PCA2 scores 
+# Cluster 2 and 5: consist of customers with medium PCA1 and PCA2 scores
+# Cluster 3: represents customers with a high PCA2 and medium spending
+# Cluster 4: represents customers with high PCA2 and low PCA1 scores 
+# Cluster 6: represents customers with a high PCA1 and PCA2 scores
+
+### Summary ###
+# Through our models we have identified how the mall can improve their marketing efforts to specific customer segments 
+# based on age, gender, income, and overall spending.  We've identified that the mall's primary customers are
+# women between 25-40yo with medium incomes. 
+
